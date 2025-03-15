@@ -31,6 +31,7 @@ library(marinecs100b)
 
 # Link to sketch
 
+
 aialik_datetime <- kefj_datetime[kefj_site == "Aialik"]
 aialik_interval <- aialik_datetime[2:length(aialik_datetime)] - aialik_datetime[1:(length(aialik_datetime)-1)]
 table(aialik_interval)
@@ -87,8 +88,20 @@ plot_kefj(coldday_datetime, coldday_temperature, coldday_exposure)
 # Translate their written description to code and calculate the extreme heat
 # exposure for the hottest day.
 
+extreme_warm_exposure <- kefj_temperature >= 25
+extreme_heat_exposure <- kefj_exposure[extreme_warm_exposure]
 
+extract_exposure <- function(site, start, end) {
+  start_alaska <- convert_to_alaska(start)
+  end_alaska <- convert_to_alaska(end)
+  extract_idx <- kefj_site == site &
+    kefj_datetime >= start_alaska &
+    kefj_datetime <= end_alaska
+  result <- kefj_exposure[extract_idx]
+  return(result)
+}
 
+extract_exposure("Aialik", "2018-07-03 00:00:00", "2018-07-03 23:59:59")
 
 # Compare your answer to the visualization you made. Does it look right to you?
 
